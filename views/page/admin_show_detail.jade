@@ -1,0 +1,260 @@
+extends  ../admin_layout
+block scripts
+    script(src="/javascripts/risk_report.js")
+block content
+    br
+    ol.breadcrumb
+        li
+            a(href="/abstract_risk") สรุปความเสี่ยง
+        li.active หัวข้อความเสี่ยง
+        li #{rows.topic_risk}
+    ul.nav.nav-tabs(role="tablist")
+        li.active(role='presentation')
+            a(href="#part1", aria-controls="part1", role="tab", data-toggle="tab") ส่วนที่ 1
+        li(role='presentation')
+            a(href='#part2', aria-controls='part2', role='tab', data-toggle='tab') ส่วนที่ 2
+        li(role='presentation')
+            a(href='#part3', aria-controls='part3', role='tab', data-toggle='tab') ส่วนที่ 3
+        li(role='presentation')
+            a(href='#part4', aria-controls='part4', role='tab', data-toggle='tab') ส่วนที่ 4
+        li(role='presentation')
+            a(href='#part5', aria-controls='part5', role='tab', data-toggle='tab') ส่วนที่ 5
+    .tab-content
+        br
+        #part1.tab-pane.active(role='tabpanel')
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title
+                        i.fa.fa-file-text
+                        | &nbsp; ส่วนที่ 1 ข้อมูลการเกิดอุบัติการณ์
+                .panel-body
+                    .row
+                        .col-md-4
+                            .form-group
+                                label(for="slRisktype") ประเภทอุบัติการณ์
+                                input(type="text", value="#{rows.qq}", readonly).form-control
+                        .col-md-8
+                            .form-grop
+                                label(for="slComplaint") การจำแนกประเภท
+                                input(type="text", value="#{rows.ww}", readonly).form-control
+
+                    .row
+                        .col-md-12
+                            .form-group
+                                label(for="txtTopic") เรื่องหัวข้อความเสี่ยง
+                                input(type="text", value="#{rows.topic_risk}", readonly).form-control
+                    .row
+                        .col-md-3
+                            .form-group
+                                label(for="txtDate_risk") วันที่เกิดเหตุ
+                                input(type="text", value="#{rows.date_risk}", readonly).form-control
+
+                        .col-md-3
+                            .form-group
+                                label(for="txtTime_risk") เวลาที่เกิดเหตุ
+                                input(type="text", value="#{rows.time_risk}", readonly).form-control
+                    .row
+                        .col-md-3
+                            .form-group
+                                label(for="txtDate_report_risk") วันที่รายงาน
+                                input(type="text", value="#{rows.date_report_risk}", readonly).form-control
+                        .col-md-3
+                            .form-group
+                                label(for="txtTime_report_risk") เวลาที่รายงาน
+                                input(type="text", value="#{rows.time_report_risk}", readonly).form-control
+                    .row
+                        .col-md-4
+                            .form-group
+                                label(for="slDepartment") หน่วยงาน
+                                input(type="text", value="#{rows.depname}", readonly).form-control
+                        //.col-md-8
+                            .form-group
+                                label(for="txtArea_risk") บริเวณที่เกิดความเสี่ยง
+                                input(type="text", value="#{rows.area_risk}", readonly).form-control
+        #part2.tab-pane(role='tabpanel')
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title
+                        i.fa.fa-file-text
+                        | &nbsp; ส่วนที่ 2 รายละเอียดอุบัติการณ์
+                .panel-body
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slProgram") Program
+                                input(type="text", value="#{rows.program_risk}", readonly).form-control
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slSubProgram") Sub Program
+                                input(type="text", value="#{rows.name_sub_program}", readonly).form-control
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slSubGroup") Sub Group
+                                input(type="text", value="#{rows.vv}", readonly).form-control
+                    //.row
+                        .col-md-12
+                            .form-group
+                                label(for="txtNote_other") ระบุกรณีเลือกประเภทอื่นๆ
+                                input(type="text", value="#{rows.dd}", readonly).form-control
+                    .row
+                        .col-md-12
+                            .form-group
+                                label(for="txtRisk_detail") รายละเอียดความเสี่ยง
+                                textarea(type="text",rows="5", readonly=).form-control #{rows.risk_detail}
+                    .row
+                        .col-md-7
+                            .form-group
+                                label.radio(for="radioSentinel") Sentinel event case (เหตุการณ์ที่ต้องรายงานภายใน 24 ชม.)
+                                | &nbsp;&nbsp;&nbsp;
+                                if rows.sentinel=="Y"
+                                    input#radioYes(type='radio', name='sentinel', checked='checked', disabled="disabled")
+                                    |  ใช่
+                                else
+                                    input#radioNo(type='radio', name='sentinel', checked='checked', disabled="disabled")
+                                    |  ไม่
+                    .row
+                        .col-md-12#divRiskLevel
+                            .form-group
+                                label(for="slRisk_level") ระดับความรุนแรง
+                                input(type="text", value="#{rows.pp}", readonly).form-control
+                    .row
+                        .col-md-12
+                            .form-group
+                                label(for="txtRisk_correct") การแก้ไขปัญหาทันที
+                                input(type="text", value="#{rows.risk_correct}", readonly).form-control
+        #part3.tab-pane(role='tabpanel')
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title
+                        i.fa.fa-file-text
+                        | &nbsp; ส่วนที่ 3 ผลกระจากการเกิดอุบัติการณ์
+                .panel-body
+                        .row
+                            .col-md-4
+                                form.form-inline
+                                    .form-group
+                                        label.radio(for="radioSone") ประเภทผู้ป่วย :
+                                        | &nbsp;&nbsp;&nbsp;
+                                        if rows.sone=="OPD"
+                                            input#radioOPD(type='radio', name='sone', checked='checked', disabled="disabled")
+                                            |  OPD
+                                        else
+                                            input#radioIPD(type='radio', name='sone', checked='checked', disabled="disabled")
+                                            |  IPD
+                            .col-md-3
+                                .form-group
+                                    label(for="txtHn") HN
+                                    input(type="text", value="#{rows.hn}", readonly).form-control
+                            .col-md-3
+                                .form-group
+                                    label(for="txtAn") AN
+                                    input(type="text", value="#{rows.an}", readonly).form-control
+                        .row
+                            .col-md-4
+                                .form-group
+                                    label(for="txtName_patient") ชื่อผู้ป่วย
+                                    input(type="text", value="#{rows.name_patient}", readonly).form-control
+                            .col-md-8
+                                .form-group
+                                    label(for="txtNote_patient") รายละเอียด
+                                    input(type="text", value="#{rows.note_patient}", readonly).form-control
+                        .row
+                            .col-md-4
+                                .form-group
+                                    label(for="txtName_kin") ญาติผู้ป่วย
+                                    input(type="text", value="#{rows.name_kin}", readonly).form-control
+                            .col-md-8
+                                .form-group
+                                    label(for="txtNote_kin") รายละเอียด
+                                    input(type="text", value="#{rows.note_kin}", readonly).form-control
+                        .row
+                            .col-md-4
+                                .form-group
+                                    label(for="txtName_officer") เจ้าหน้าที่
+                                    input(type="text", value="#{rows.name_officer}", readonly).form-control
+                            .col-md-8
+                                .form-group
+                                    label(for="txtNote_officer") รายละเอียด
+                                    input(type="text", value="#{rows.note_officer}", readonly).form-control
+                        .row
+                            .col-md-4
+                                .form-group
+                                    label(for="txtName_other") อื่นๆ
+                                    input(type="text", value="#{rows.name_other}", readonly).form-control
+                            .col-md-8
+                                .form-group
+                                    label(for="txtNote_other2") รายละเอียด
+                                    input(type="text", value="#{rows.note_other}", readonly).form-control
+        #part4.tab-pane(role='tabpanel')
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title
+                        i.fa.fa-file-text
+                        | &nbsp; ส่วนที่ 4 รายละเอียดผู้รายงาน
+                .panel-body
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slType_report") ประเภทรายงาน
+                                input(type="text", value="#{rows.zz}", readonly).form-control
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtName_report") ผู้รายงาน
+                                input(type="text", value="#{rows.name_report}", readonly).form-control
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtPosition") ตำแหน่ง
+                                input(type="text", value="#{rows.position}", readonly).form-control
+                    .row
+                        .col-md-4
+                            .form-group
+                                label(for="slDepartment2") หน่วยงาน
+                                input(type="text", value="#{rows.ii}", readonly).form-control
+
+        #part5.tab-pane(role='tabpanel')
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title
+                        i.fa.fa-file-text
+                        | &nbsp; ส่วนที่ 5 ทบทวนการเกิดอุบัติการณ์ (กรรมการความเสี่ยง/หัวหน้า)
+                .panel-body
+                    .row
+                        .col-md-3
+                            input(type="hidden" value="#{risk_id}")#riskid
+                            .form-group
+                                label(for="txtDate_repeat") วันที่ทบทวน
+                                    input(type="text", value="#{rows.date_repeat}", readonly).form-control
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtName_repeat") ผู้ทบทวน
+                                input(type="text", value="#{rows.name_repeat}").form-control
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtResult_repeat") ผลทบทวน
+                                textarea(type="text", rows="3").form-control #{rows.result_repeat}
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtDepcode_connected") ชื่อหหน่วยงานที่เกี่ยวข้อง
+                                textarea(type="text", rows="3").form-control #{rows.depcode_connected}
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtEdit_system") การแก้ไขเชิงระบบ
+                                textarea(type="text", rows="3").form-control #{rows.edit_system}
+                    .row
+                        .col-md-3
+                            .form-group
+                                label(for="txtDate_finished") วันที่สิ้นสุดการแก้ไข
+                                input(type="text", value="#{rows.date_finished}").form-control
+                    .row
+                        .col-md-8
+                            .form-group
+                                label(for="txtNote") หมายเหตุ
+                                textarea(type="text", rows="3").form-control #{rows.zx}

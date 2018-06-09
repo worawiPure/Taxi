@@ -1,0 +1,117 @@
+extends  ../admin_layout
+block scripts
+    script(src="")
+block content
+    .container
+        .row
+            .col-md-4
+                br
+                .panel
+                    .panel-heading(style="background-color:#5FE090")
+                        h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp; ข้อมูลการเช่ารถ
+                    .panel-body
+                        .ul.nav.nav-pills.nav-stacked
+                            if session.level_user_id == 1
+                                li
+                                    a(href="/rent/save_car_today")
+                                        i.fa.fa-book
+                                        | &nbsp; บันทึกการเช่ารถประจำวัน
+                                li
+                                    a(href="/bill/save_bill_today")
+                                        i.fa.fa-book
+                                        | &nbsp; บันทึกการจ่ายค่าเช่ารถ
+                                li
+                                    a(href="#")
+                                        | &nbsp;
+            .col-md-4
+                br
+                .panel
+                    .panel-heading(style="background-color:#90B8BC")
+                        h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp; ข้อมูลจ่ายอะไหล่รถ
+                    .panel-body
+                        .ul.nav.nav-pills.nav-stacked
+                            if session.level_user_id == 1
+                                li
+                                    a(href="#")
+                                        i.fa.fa-book
+                                        | &nbsp; บันทึกการจ่ายอะไหล่รถ
+                                li
+                                    a(href="#")
+                                        i.fa.fa-book
+                                        | &nbsp; ดูรายงานการจ่ายอะไหล่รถ
+                                li
+                                    a(href="#")
+                                        | &nbsp;
+            .col-md-4
+                br
+                .panel
+                    .panel-heading(style="background-color:#D9F96D")
+                        h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp; ข้อมูลการสั่งซื้ออะไหล่รถ
+                    .panel-body
+                        .ul.nav.nav-pills.nav-stacked
+                            if session.level_user_id == 1
+                                li
+                                    a(href="#")
+                                        i.fa.fa-book
+                                        | &nbsp; บันทึกใบสั่งซื้ออะไหล่รถ
+                                li
+                                    a(href="#")
+                                        i.fa.fa-book
+                                        | &nbsp; ดูรายงานการสั่งซื้ออะไหล่รถ
+                                li
+                                    a(href="#")
+                                        | &nbsp;
+        .row
+            .col-md-4
+                br
+                .panel
+                    .panel-heading(style="background-color:#70BAC2")
+                        h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp; รายงาน
+                    .panel-body
+                        .ul.nav.nav-pills.nav-stacked
+                            if session.level_user_id == 1
+                                li
+                                    a(href="#")
+                                        i.fa.fa-file-text
+                                        | &nbsp; รายงานแสดงรายรับ-รายจ่าย
+                                li
+                                    a(href="#")
+                                        i.fa.fa-file-text
+                                        | &nbsp; สต๊อคอะไหล่รถ
+                                li
+                                    a(href="#")
+                                        | &nbsp; 
+            .col-md-4
+                br
+                .panel
+                    .panel-heading(style="background-color:#9FA6B4")
+                        h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp; Setting
+                    .panel-body
+                        .ul.nav.nav-pills.nav-stacked
+                            if session.level_user_id == 1
+                                li
+                                    a(href="#")
+                                        i.fa.fa-cogs
+                                        | &nbsp; เพิ่มคนขับ Taxi
+                                li
+                                    a(href="#")
+                                        i.fa.fa-cogs
+                                        | &nbsp; เพิ่มรถ Taxi
+                                li
+                                    a(href="#")
+                                        i.fa.fa-cogs
+                                        | &nbsp; เพิ่มรายการอะไหล่รถ
+                                li
+                                    a(href="#")
+                                        i.fa.fa-cogs
+                                        | &nbsp; เพิ่มประเภทเช่ารถ

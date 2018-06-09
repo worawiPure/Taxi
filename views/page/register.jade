@@ -1,0 +1,61 @@
+extends  ../register_layout
+
+block scripts
+    script(src="/javascripts/register.js")
+
+block content
+    BR
+    .alert.alert-warning(role="alert",style="display: none;")#divAlert
+        i.fa.fa-warning
+        | &nbsp; กรอกข้อมูลไม่สมบูรณ์
+
+    .alert.alert-danger.alert-dismissable(role="alert", style="display: none;")#divDuplicated
+        button(type="button",data-dismiss="alert",aria-label="Close").close
+            span(aria-hidden="true")
+        p Username/Password นี้มีแล้วในฐานข้อมูล
+
+    .panel.panel-primary
+        .panel-heading
+            h3.panel-title
+                i.glyphicon.glyphicon-user
+                | &nbsp; สมัครสมาชิก
+        .panel-body
+            .row
+                .col-md-12
+                    .form-group
+                        label(for="txtUsername") ชื่อผู้ใช้
+                        input(type="text",name="username",placeholder="ชื่อผู้ใช้งาน")#txtUsername.form-control
+            .row
+                .col-md-12
+                    .form-group
+                        lable(for="txtPassword") รหัสผ่าน
+                        input(type="password",name="password",placeholder="รหัสผ่าน")#txtPassword.form-control
+            .row
+                .col-md-12
+                    .form-group
+                        label(for="slPname") คำนำหน้า
+                        select.form-control#slPname
+                            option(value="") กรุณาเลือกรายการ....
+                            for p in data.pnames
+                                option(value="#{p.id}") #{p.name}
+            .row
+                .col-md-12
+                    .form-group
+                        label(for="txtName") ชื่อ
+                        input(type="text",name="name",placeholder="ชื่อ")#txtName.form-control
+            .row
+                .col-md-12
+                    .form-group
+                        label(for="txtLname") นามสกุล
+                        input(type="text",name="lname",placeholder="นามสกุล")#txtLname.form-control
+            .row
+                .col-md-12
+                    .form-group
+                        label(for="slDepartment") แผนก
+                            select#slDepartment.form-control
+                                option(value="") กรุณาเลือกรายการ....
+                                for d in data.departments
+                                    option(value="#{d.depcode}") #{d.depname}
+
+
+    button.btn.btn-success(type="button")#btnSaveregister บันทึก

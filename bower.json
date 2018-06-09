@@ -1,0 +1,23 @@
+{
+  "name": "myApp",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "lodash": "~3.10.1",
+    "moment": "~2.13.0",
+    "bootstrap-material-design": "~0.3.0",
+    "paging": "~1.2.0",
+    "nprogress": "~0.2.0",
+    "js-xlsx": "~0.8.0",
+    "jquery-loading": "^1.2.0"
+  }
+}

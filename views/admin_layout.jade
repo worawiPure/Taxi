@@ -1,0 +1,79 @@
+doctype html
+html
+  head
+    title Taxi อนงค์นาท
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="/libs/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/libs/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/material.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/ripples.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/roboto.min.css")
+    link(rel="stylesheet", href="/libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css")
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    link(rel="stylesheet", href="/libs/nprogress/nprogress.css")
+    link(rel="stylesheet", href="/libs/sweetalert/dist/sweetalert.css")
+    link(rel="stylesheet", href="/libs/jquery-loading/dist/jquery.loading.css")
+    script(src="/libs/jquery/dist/jquery.min.js")
+    script(src="/libs/bootstrap/dist/js/bootstrap.min.js")
+    script(src="/libs/bootstrap-material-design/dist/js/material.min.js")
+    script(src="/libs/bootstrap-material-design/dist/js/ripples.min.js")
+    script(src="/libs/paging/jquery.paging.min.js")
+    script(src="/libs/lodash/lodash.min.js")
+    script(src="/libs/moment/moment.js")
+    script(src="/libs/moment/min/moment-with-locales.js")
+    script(src="/libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")
+    script(src="/libs/nprogress/nprogress.js")
+    script(src="/libs/js-xlsx/dist/xlsx.core.min.js")
+    script(src="/libs/sweetalert/dist/sweetalert.min.js")
+    script(src="/libs/jquery-loading/dist/jquery.loading.js")
+    script(src="/javascripts/app.js")
+
+    script.
+        $(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('input[readonly]').css('background-color', 'white');
+            $('input[disabled="disabled"]').css('background-color', 'white');
+            $('[data-datepicker]').datetimepicker({
+                locale: 'th',
+                format: 'DD/MM/YYYY'
+            });
+            $('[data-timepicker]').datetimepicker({
+                format: 'HH:mm'
+            });
+        })
+    block scripts
+  body
+        nav.navbar.navbar-inverse.navbar-fixed-top
+            .container
+                .navbar-header
+                    button(type="button", data-toggle="collapse", data-taget="#navbar",
+                    aria-expanded="false", aria-controls="navbar").navbar-toggle.collapsed
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/main_report")
+                        | &nbsp; อนงค์นาท TAXI
+                #navbar.navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                    ul.nav.navbar-nav.pull-right
+                        .btn-group
+                            a.btn(style="background-color:#98E28A")(href='#')
+                                i.fa.fa-user.fa-fw
+                                |  #{session.fullname}
+                            a.btn(style="background-color:#52DE3A").dropdown-toggle(data-toggle='dropdown', href='#')
+                                span.fa.fa-caret-down(title='Toggle dropdown menu')
+                            ul.dropdown-menu
+                                //li
+                                    a(href='/users/admin_profile')
+                                        i.fa.fa-pencil.fa-fw
+                                        |  ข้อมูลส่วนตัว
+                                li
+                                    a(href='/users/logout')
+                                        i.fa.fa-power-off.fa-fw
+                                        |  ออกจากระบบ
+        .container
+            .row
+                .col-md-12
+                    block content

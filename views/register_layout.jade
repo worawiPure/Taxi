@@ -1,0 +1,38 @@
+doctype html
+html
+    head
+        title Register
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/libs/bootstrap/dist/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/material.min.css")
+        link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/ripples.min.css")
+        link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/roboto.min.css")
+        link(rel="stylesheet", href="/stylesheets/style.css")
+        script(src="/libs/jquery/dist/jquery.min.js")
+        script(src="/libs/bootstrap/dist/js/bootstrap.min.js")
+        script(src="/libs/jquery/dist/jquery.min.js")
+        script(src="/libs/bootstrap/dist/js/bootstrap.min.js")
+        script(src="/libs/bootstrap-material-design/dist/js/material.min.js")
+        script(src="/libs/bootstrap-material-design/dist/js/ripples.min.js")
+        script(src="/javascripts/app.js")
+
+        block scripts
+    body
+        nav.navbar.navbar-default.navbar-fixed-top
+            .container
+                .navbar-header
+                    button(type="button", data-toggle="collapse", data-taget="#navbar",
+                    aria-expanded="false", aria-controls="navbar").navbar-toggle.collapsed
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/users/user") KC Risk
+                p.navbar-text.navbar-right โปรแกรมความเสี่ยง โรงพยาบาลกันทรวิชัย จังหวัดมหาสารคาม
+
+        .container
+            .row
+                .col-md-3
+                .col-md-7
+                    block content

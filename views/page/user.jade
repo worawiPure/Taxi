@@ -1,0 +1,84 @@
+extends  ../admin_layout
+block scripts
+    script(src="/javascripts/users.js")
+block content
+    br
+    ol.breadcrumb
+        li
+            a(href="#") หน้าหลัก
+        li.active รายการผู้ใช้งาน
+    .panel.panel-primary
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-comments-o
+                | &nbsp; รายการผู้ใช้งาน
+        .panel-body
+            a(href="/users/register")
+                button.btn.btn-success
+                    i.fa.fa-save
+                    | &nbsp; เพิ่มผู้ใช้งาน
+            a(href="/users/comfirm_user")
+                button.btn.btn-danger
+                    i.fa.fa-check
+                    | &nbsp; ยืนยันผู้ใช้งาน
+            //button.btn.btn-success.pull-right#btnShowModal
+                i.fa.fa-plus
+                | &nbsp; เพิ่มผู้ใช้งาน
+            table.table.striped#tblRiskUsers
+                thead
+                    tr
+                        td ลำดับ
+                        td ชื่อ
+                        td username
+                        td ระดับ
+                        td แผนก
+                        td แก้ไข/ลบ
+                    tbody
+            ul.pagination#paging
+
+    .modal.fade#mdlNew(tabindex='-1',role='dialog')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-lable='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title  เพิ่ม/แก้ไขรายการ
+                .modal-body(style="padding-top:20px;")
+                    input(type="hidden" value="")#txtId
+                    .form-group
+                        label(for="txtUsername") Username
+                        input(type="text",name="username",placeholder="ชื่อผู้ใช้งาน",readonly)#txtUsername.form-control
+                    //.form-group
+                        label(for="txtPassword") รหัสผ่าน
+                        input(type="password",name="password",placeholder="รหัสผ่าน")#txtPassword.form-control
+                    .form-group
+                        label(for="slPname") คำนำหน้า
+                        select.form-control#slPname
+                            option(value="") กรุณาเลือกรายการ....
+                            for p in data.pnames
+                                option(value="#{p.id}") #{p.name}
+                    .form-group
+                        label(for="txtFName") ชื่อ
+                        input(type="text")#txtFname.form-control
+                    .form-group
+                        label(for="txtLName") สกุล
+                        input(type="text")#txtLname.form-control
+                    .form-group
+                        label(for="slDepartment") แผนก
+                        select.form-control#slDepartment
+                            option(value="") กรุณาเลือกรายการ....
+                            for d in data.departments
+                                option(value="#{d.depcode}") #{d.depname}
+                    .form-group
+                        label(for="slLayer") ระดับผู้ใช้งาน
+                        select.form-control#slLayer
+                            option(value="") กรุณาเลือกรายการ....
+                            for y in data.layers
+                                option(value="#{y.id}") #{y.level_username}
+                    .modal-footer
+                        button.btn.btn-primary#btnSave
+                            i.fa.fa-save
+                            | &nbsp; บันทึก
+                        button.btn.btn-danger(data-dismiss="modal")
+                            | &nbsp; ปิดหน้าต่าง
+

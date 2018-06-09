@@ -1,0 +1,51 @@
+extends  ../admin_layout
+block scripts
+    script(src="/javascripts/department.js")
+block content
+    br
+    ol.breadcrumb
+        li
+            a(href="#") หน้าหลัก
+        li.active รายการแผนก
+    .panel.panel-primary
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-comments-o
+                | &nbsp; รายการแผนก
+        .panel-body
+            button.btn.btn-success.pull-right#btnShowModal
+                i.fa.fa-plus
+                | &nbsp; เพิ่มแผนก
+            table.table.striped#tblDepartment
+                thead
+                    tr
+                        td ลำดับ
+                        td แผนก
+                        td รหัสแผนก
+                        td แก้ไข/ลบ
+                    tbody
+    .modal.fade#mdlNew(tabindex='-1',role='dialog')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-lable='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title  เพิ่ม/แก้ไขรายการ
+                .modal-body
+                    .alert.alert-danger.alert-dismissable(role="alert",style="display: none;")#divAlert
+                        button(type="button",data-dismiss="alert",aria-label="Close").close
+                            span(aria-hidden="true")
+                        p รหัสแผนกนี้ได้มีในระบบแล้ว
+                    input(type="hidden" value="")#txtId
+                    .form-group
+                        label(for="txtDepartName") ชื่อแผนก
+                        input(type="text")#txtDepartName.form-control
+                    .form-group
+                        label(for="txtDepcode") รหัสแผนก
+                        input(type="text")#txtDepcode.form-control
+                    .modal-footer
+                        button.btn.btn-primary#btnSave
+                            i.fa.fa-save
+                            | &nbsp; บันทึก
+                        button.btn.btn-danger(data-dismiss="modal")
+                            | &nbsp; ปิดหน้าต่าง

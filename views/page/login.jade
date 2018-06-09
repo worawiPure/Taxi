@@ -1,0 +1,17 @@
+extends ../login_layout
+block content
+    Br
+    .panel.panel-inverse
+        .panel-heading
+            h3.panel-title
+                i.glyphicon.glyphicon-user
+                | &nbsp; กรุณา Login
+        .panel-body
+            form(action="#")
+                .form-group
+                    label(for="txtUsername") ชื่อผู้ใช้
+                    input(type="text",name="username",placeholder="ชื่อผู้ใช้งาน")#txtUsername.form-control
+                .form-group
+                    label(for="txtPassword") รหัสผ่าน
+                    input(type="password",name="password",placeholder="รหัสผ่าน")#txtPassword.form-control
+                button.btn.btn-inverse(type="submit")#btnLogin Login เข้าระบบ

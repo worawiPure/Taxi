@@ -1,0 +1,94 @@
+extends  ../layout
+
+block scripts
+    script(src="/javascripts/user_profile.js")
+
+block content
+    br
+    .alert.alert-warning(role="alert",style="display: none;")#divAlert
+        i.fa.fa-warning
+        | &nbsp; กรอกข้อมูลไม่สมบูรณ์
+
+    .alert.alert-danger.alert-dismissable(role="alert", style="display: none;")#divDuplicated1
+        button(type="button",data-dismiss="alert",aria-label="Close").close
+            span(aria-hidden="true")
+        p Username/Password นี้มีแล้วในฐานข้อมูล
+
+    .panel.panel-primary
+        .panel-heading
+            h3.panel-title
+                i.glyphicon.glyphicon-user
+                | &nbsp; รายละเอียดผู้ใช้งาน
+        .panel-body
+            buton.btn.btn-danger.pull-right#btnShowModal
+                i.fa.fa-edit
+                | &nbsp; แก้ไข Password
+            input(type="hidden" value="#{data.users.id}")#txtId
+            .row
+                .col-md-8
+                    .form-group
+                        label(for="txtUsername") ชื่อผู้ใช้
+                        input(type="text",name="username",value = '#{data.users.user}',readonly)#txtUsername.form-control
+            .row
+                .col-md-8
+                    .form-group
+                        label(for="slPname") คำนำหน้า
+                        select#slPname.form-control
+                            for d in data.pnames
+                                if d.name == data.users.name
+                                    option(value="#{d.id}", selected="selected") #{d.name}
+                                else
+                                    option(value="#{d.id}") #{d.name}
+            .row
+                .col-md-8
+                    .form-group
+                        label(for="txtName") ชื่อ
+                        input(type="text",name="name",value = "#{data.users.fname}")#txtName.form-control
+            .row
+                .col-md-8
+                    .form-group
+                        label(for="txtLname") นามสกุล
+                        input(type="text",name="lname",value = "#{data.users.lname}")#txtLname.form-control
+            .row
+                .col-md-8
+                    .form-group
+                        label(for="slDepartment") แผนก
+                        select#slDepartment.form-control
+                            for p in data.departments
+                                if p.id == data.users.depcode
+                                    option(value="#{p.depcode}", selected="selected") #{p.depname}
+                                else
+                                    option(value="#{p.depcode}") #{p.depname}
+
+
+    button.btn.btn-success(type="button")#btnEdit แก้ไขรายละเอียด
+
+    .modal.fade#mdlNew(tabindex="-1",role="dialog")
+
+        p Username/Password นี้มีแล้วในฐานข้อมูล
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-lable='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title  แก้ไข USERNAME / PASSWORD
+
+                .modal-body(style="padding-top: 20px;")
+                    .alert.alert-danger.alert-dismissable(role="alert", style="display: none;")#divDuplicated
+                        button(type="button",data-dismiss="alert",aria-label="Close").close
+                            span(aria-hidden="true")
+                        p Username/Password นี้มีแล้วในฐานข้อมูล
+                    input(type="hidden" value="#{data.users.id}")#txtId_user
+                    .form-group
+                        label(for="txtEdit_Username") User
+                        input(type="text",name="edit_username",value = '#{data.users.user}',readonly)#txtEdit_Username.form-control
+                    .form-group
+                        label(for="txtEdit_password") Password
+                        input(type="password",name="edit_password")#txtEdit_password.form-control
+                    .modal-footer
+                        button.btn.btn-primary#btnSave
+                            i.fa.fa-save
+                            | &nbsp; บันทึก
+                        button.btn.btn-danger(data-dismiss="modal")
+                            | &nbsp; ปิดหน้าต่าง
+

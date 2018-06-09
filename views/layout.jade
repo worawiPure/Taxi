@@ -1,0 +1,121 @@
+doctype html
+html
+  head
+    title โปรแกรมความเสี่ยง verion 0.0.2
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="/libs/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/libs/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/material.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/ripples.min.css")
+    link(rel="stylesheet", href="/libs/bootstrap-material-design/dist/css/roboto.min.css")
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    script(src="/libs/jquery/dist/jquery.min.js")
+    script(src="/libs/bootstrap/dist/js/bootstrap.min.js")
+    script(src="/libs/bootstrap-material-design/dist/js/material.min.js")
+    script(src="/libs/bootstrap-material-design/dist/js/ripples.min.js")
+    script(src="/libs/paging/jquery.paging.min.js")
+    script(src="/javascripts/app.js")
+    script(src="/libs/lodash/lodash.min.js")
+    script(src="/libs/moment/min/moment-with-locales.js")
+    script(src="/libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")
+    script(src="/libs/moment/moment.js")
+
+    script.
+        $(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('input[readonly]').css('background-color', 'white');
+            $('input[disabled="disabled"]').css('background-color', 'white');
+            $('[data-datepicker]').datetimepicker({
+                locale: 'th',
+                format: 'DD/MM/YYYY'
+            });
+            $('[data-timepicker]').datetimepicker({
+                format: 'HH:mm'
+            });
+        })
+
+    block scripts
+  body
+    nav.navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+
+              button(type="button", data-toggle="collapse", data-taget="#navbar",
+              aria-expanded="false", aria-controls="navbar").navbar-toggle.collapsed
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+              a.navbar-brand(href="#")
+                    i.fa.fa-exclamation-triangle
+                    | &nbsp; KC Risk
+            #navbar.navbar-collapse.collapse.navbar-responsive-collapse
+                  ul.nav.navbar-nav
+                        li.active
+                            a(href="/risk_report") หน้าแรก
+                        li.dropdown
+                              a(href="#", data-toggle="dropdown", role="button",
+                              aria-haspopup="true", aria-expanded="false").dropdown-toggle
+                                    | กิจกรรม
+                                    span.caret
+                              ul.dropdown-menu
+                                    li
+                                        a(href="/request") บันทึกความเสี่ยง
+                                    li
+                                        a(href="/report_risk/user_report") สรุป/รายงาน
+                  p.navbar-text.navbar-right #{session.fullname} | #{session.depname}
+                  ul.nav.navbar-nav.pull-right
+                    li.dropdown
+                        a(href="#", data-toggle="dropdown", role="button",
+                        aria-haspopup="true", aria-expanded="false").dropdown-toggle
+                            i.fa.fa-user
+                        ul.dropdown-menu
+                            li
+                                a(href="/users/user_profile")
+                                    i.fa.fa-edit
+                                        | &nbsp;&nbsp; ข้อมูลส่วนตัว
+                            li
+                                a(href="/users/logout")
+                                    i.fa.fa-power-off
+                                    | &nbsp;&nbsp;ออกจากระบบ
+    .container
+      .row
+        .col-md-3
+            br
+            .panel.panel-default
+                .panel-body
+                    .ul.nav.nav-pills.nav-stacked
+                      if session.level_user_id==1 || session.level_user_id==4
+                          li.active
+                            a(href="#")
+                              i.fa.fa-tags
+                              | &nbsp; เมนูหลัก
+                      if session.level_user_id==1
+                          li
+                            a(href="/request")
+                              i.fa.fa-file-text
+                              | &nbsp; รายงานความเสี่ยง
+                          li
+                            a(href="/risk_report")
+                              i.fa.fa-file-text
+                              | &nbsp; หัวข้อความเสี่ยง
+                      if session.level_user_id==4
+                          li
+                            a(href="/request")
+                                  i.fa.fa-file-text
+                                  | &nbsp; รายงานความเสี่ยง
+                          li
+                            a(href="/user_senior_risk_report")
+                                  i.fa.fa-file-text
+                                  | &nbsp; หัวข้อความเสี่ยง
+                      if session.level_user_id==1 || session.level_user_id==4
+                          li
+                            a(href="/report_risk/user_report")
+                              i.fa.fa-bar-chart-o
+                              | &nbsp; สรุปรายงานความเสี่ยง
+
+        .col-md-9
+          block content
+
+

@@ -1,0 +1,107 @@
+extends  ../admin_layout
+
+block scripts
+    script(src="/javascripts/report_stat.js")
+
+block content
+    br
+    //.well.well-sm.alert.alert-warning(role='alert')
+    .panel.panel-danger#Block_Search
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-search
+                | &nbsp; ค้นหารายงาน
+        .panel-body
+            div.form-inline
+                .row
+                    .col-md-12
+                        button.close(type='button', aria-label='Close')#close_Search
+                            span(aria-hidden='true') &times;
+                .row
+                    .col-md-12
+                        .form-group
+                            label วันที่
+                            | &nbsp;&nbsp;&nbsp;&nbsp;
+                            #datetimepicker2.input-group(data-datepicker)
+                                input#Date_Search1.form-control(type='text')
+                                span.input-group-addon
+                                    span.glyphicon.glyphicon-calendar
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            label ถึง
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            #datetimepicker3.input-group(data-datepicker)
+                                input#Date_Search2.form-control(type='text')
+                                span.input-group-addon
+                                    span.glyphicon.glyphicon-calendar
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            button#btnSearch(type="button").btn.btn-primary.btn-sm ค้นหา
+                            button#btnPrint(type="button").btn.btn-primary.btn-sm ปริ้นรายการ
+    .panel.panel-danger#Block_Show_report
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-comments-o
+                | &nbsp; รายการ
+        .panel-body
+            button.btn.btn-xs.btn-primary.pull-right#btnShowSearch
+                i.fa.fa-search.fa-lg
+                | &nbsp; ค้นหา
+            buton.btn.btn-info.btn-xs.pull-right#btnShowModal
+                i.fa.fa-plus
+                | &nbsp; เพิ่มรายงาน
+            table.table.striped#tblReport_stat
+                thead
+                    tr
+                        td ลำดับ
+                        td วันที่
+                        td รายละเอียด
+                        td แผนก
+                        td(style="width : 90px")
+                            i.fa.fa-cog.fa-spin.fa-3w.fa-fw
+                    tbody
+            ul.pagination#paging
+    .modal.fade#mdlNew(tabindex="-1",role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title
+                        i.fa.fa-search.fa-lg
+                        | &nbsp;รายละเอียด
+                .modal-body(style="padding-top: 20px;")
+                    input(type="hidden")#txtId
+                    .row
+                        .col-md-4
+                            .form-group.has-feedback
+                                label(for="#txtDate_report") วันที่:
+                                | &nbsp;&nbsp;
+                                #datetimepicker.input-group(data-datepicker)
+                                    input#txtDate_report.form-control(type='text')
+                                    span.input-group-addon
+                                        span.glyphicon.glyphicon-calendar
+                    | &nbsp;
+                    | &nbsp;
+                    .row
+                        .col-md-12
+                            .form-group.has-feedback
+                                label(for="txtDetail") รายละเอียด:
+                                | &nbsp;&nbsp;
+                                textarea#txtDetail(type="text",rows="5").form-control.css-require
+                            | &nbsp;
+                    .row
+                        .col-md-5
+                            .form-group.has-feedback
+                                label(for="slDepcode") แผนก:
+                                | &nbsp;
+                                select#slDepcode.form-control.css-require
+                                    option(value="") กรุณาเลือกรายการ....
+                                    for b in data.departments
+                                        option(value="#{b.depcode}") #{b.depname}
+                        | &nbsp;
+                .modal-footer
+                    button.btn.btn-primary#btnEdit
+                        i.fa.fa-save
+                        | &nbsp; ปรับปรุงข้อมูล
+                    button.btn.btn-danger(data-dismiss="modal")
+                        i.fa.fa-close
+                        | &nbsp; ปิดหน้าต่าง

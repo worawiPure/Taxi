@@ -1,0 +1,141 @@
+extends  ../admin_layout
+
+block scripts
+    script(src="/javascripts/search_rent_taxi.js")
+
+block content
+    br
+    //.well.well-sm.alert.alert-warning(role='alert')
+    .panel.panel-danger#Block_Search
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-search
+                | &nbsp; ค้นหารายงาน
+        .panel-body
+            div.form-inline
+                .row
+                    .col-md-12
+                        button.close(type='button', aria-label='Close')#close_Search
+                            span(aria-hidden='true') &times;
+                .row
+                    .col-md-12
+                        .form-group
+                            label วันที่
+                            | &nbsp;&nbsp;&nbsp;&nbsp;
+                            #datetimepicker2.input-group(data-datepicker)
+                                input#Date_Search1.form-control(type='text')
+                                span.input-group-addon
+                                    span.glyphicon.glyphicon-calendar
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            label ถึง
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            #datetimepicker3.input-group(data-datepicker)
+                                input#Date_Search2.form-control(type='text')
+                                span.input-group-addon
+                                    span.glyphicon.glyphicon-calendar
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            label(for="slPersonx") ชื่อผู้เช่ารถ:
+                            | &nbsp;
+                            select#slPersonx.form-control.css-require
+                                option(value="") ..............กรุณาเลือกรายการ...............
+                                option(value="0") เลือกทุกคน
+                                for x in data.person_taxis
+                                    option(value="#{x.id}") #{x.person}
+                            | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         
+                            button#btnSearch(type="button").btn.btn-primary.btn-sm ค้นหา
+                            button#btnPrint(type="button").btn.btn-primary.btn-sm ปริ้นรายการ
+    .panel
+        .panel-heading(style="background-color:#5FE090")
+            h3.panel-title
+                i.fa.fa-comments-o
+                | &nbsp; รายการเช่ารถ Taxi วันนี้
+        .panel-body
+            table.table.table-hover#tblRent_search
+                thead
+                    tr
+                        td ลำดับ
+                        td วันที่
+                        td ชื่อผู้เช่ารถ
+                        td ทะเบียนรถ
+                        td ประเภทการเช่า
+                        td ค่าเช่ารถ
+                        td ค่าบริการพิเศษ
+                        td รวมค่าเช่า
+                        td(style="width : 90px")
+                            i.fa.fa-cog.fa-spin.fa-3w.fa-fw
+                    tbody
+    .modal.fade#mdlNew(tabindex="-1",role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title
+                        i.fa.fa-search.fa-lg
+                        | &nbsp;เพิ่มรายชื่อการเช่ารถ
+                .modal-body(style="padding-top: 20px;")
+                    input(type="hidden")#txtId
+                    .row
+                        .col-md-6
+                            .form-group.has-feedback
+                                label(for="txtDate_rent") วันที่เช่ารถ:
+                                | &nbsp;&nbsp;
+                                #datetimepicker.input-group(data-datepicker)
+                                    input#txtDate_rent.form-control(type='text')
+                                    span.input-group-addon
+                                        span.glyphicon.glyphicon-calendar       
+                    | &nbsp;
+                    | &nbsp;
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slPerson") ชื่อผู้เช่ารถ:
+                                | &nbsp;
+                                select#slPerson.form-control.css-require
+                                    option(value="") กรุณาเลือกรายการ....
+                                    for a in data.person_taxis
+                                        option(value="#{a.id}") #{a.person}        
+                        .col-md-6
+                            .form-group       
+                                label(for="slLicense_taxi") ทะเบียนรถ Taxi:
+                                | &nbsp;
+                                select#slLicense_taxi.form-control.css-require
+                                    option(value="") กรุณาเลือกรายการ....
+                                    for b in data.taxis
+                                        option(value="#{b.id}") #{b.license_plate}
+                    | &nbsp;
+                    | &nbsp;                    
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="slType_rent") ประเภทการเช่า Taxi:
+                                | &nbsp;
+                                select#slType_rent.form-control.css-require
+                                    option(value="") กรุณาเลือกรายการ....
+                                    for c in data.rent_types
+                                        option(value="#{c.id}") #{c.rent_type}
+                        .col-md-6#divPrice_taxi
+                            .form-group
+                                label(for="txtPrice_rent") ราคาค่าเช่ารถ
+                                input(type="number",name="Price_rent",placeholder="ค่าเช่ารถ")#txtPrice_rent.form-control   
+                    | &nbsp;
+                    | &nbsp;                      
+                    .row                       
+                        .col-md-6
+                            .form-group
+                                label(for="txtspecial_pay") * ค่าบริการพิเศษ (ไม่มีให้ใส่เลข 0)
+                                input(type="number",name="special_pay",placeholder="ค่าบริการพิเศษ")#txtSpecial_pay.form-control                                                      
+                    | &nbsp;   
+                    | &nbsp;
+                    .row
+                        .col-md-12
+                            .form-group
+                                label(for="txtNote_special_pay") บันทึกรายละเอียดค่าบริการพิเศษ
+                                textarea#txtNote_special_pay(type="text", rows="3", placeholder="ยังไม่มีรายละเอียด").form-control 
+                .modal-footer
+                    button.btn.btn-primary#btnSave
+                        i.fa.fa-save
+                        | &nbsp; ปรับปรุงข้อมูล
+                    button.btn.btn-danger(data-dismiss="modal")
+                        i.fa.fa-close
+                        | &nbsp; ปิดหน้าต่าง

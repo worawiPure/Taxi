@@ -1,0 +1,54 @@
+extends  ../admin_layout
+block scripts
+    script(src="/javascripts/comfirm_users.js")
+block content
+    br
+    ol.breadcrumb
+        li
+            a(href="/users/user") หน้าหลัก
+        li.active รายการยืนยันผู้ใช้งาน
+    .panel.panel-primary
+        .panel-heading
+            h3.panel-title
+                i.fa.fa-comments-o
+                | &nbsp; รายการผู้ใช้งานรอการยืนยัน
+        .panel-body
+            table.table.striped#tblRiskUsers
+                thead
+                    tr
+                        td ลำดับ
+                        td ชื่อ
+                        td username
+                        td ระดับ
+                        td แผนก
+                        td ยืนยัน
+                    tbody
+
+    .modal.fade#mdlComfirm(tabindex='-1',role='dialog')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-lable='Close')
+                        span(aria-hidden='true') &times;
+                    h4.modal-title  ยืนยันผู้ใช้งาน
+                .modal-body
+                    input(type="hidden",value="")#txtId
+                    .form-group
+                        label(for="txtUsername") Username
+                        input(type="text",name="username",placeholder="Username",readonly)#txtUsername.form-control
+                    .form-group
+                        label(for="txtPname") ชื่อ-สกุล
+                        input(type="text",name="fullname",placeholder="ชื่อผู้ใช้งาน",readonly)#txtPname.form-control
+                    .form-group
+                        label(for="txtDepartment") แผนก
+                        input(type="text",name="department",placeholder="แผนก",readonly)#txtDepartment.form-control
+                    .form-group
+                        label(for="txtLevel") ระดับผู้ใช้งาน
+                        input(type="text",name="level_user",placeholder="แผนก",readonly)#txtLevel.form-control
+                    .modal-footer
+                        button.btn.btn-primary#btnComfirm
+                            i.fa.fa-save
+                            | &nbsp; ยืนยันผู้ใช้งาน
+                        button.btn.btn-danger(data-dismiss="modal")
+                            | &nbsp; ปิดหน้าต่าง
+

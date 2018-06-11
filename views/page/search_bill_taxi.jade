@@ -1,7 +1,7 @@
 extends  ../admin_layout
 
 block scripts
-    script(src="/javascripts/search_rent_taxi.js")
+    script(src="/javascripts/search_bill_taxi.js")
 
 block content
     br
@@ -49,17 +49,14 @@ block content
                 i.fa.fa-comments-o
                 | &nbsp; รายการเช่ารถ Taxi วันนี้
         .panel-body
-            table.table.table-hover#tblRent_search
+            table.table.table-hover#tblBill_search
                 thead
                     tr
                         td ลำดับ
                         td วันที่
                         td ชื่อผู้เช่ารถ
-                        td ทะเบียนรถ
-                        td ประเภทการเช่า
-                        td ค่าเช่ารถ
-                        td ค่าบริการพิเศษ
-                        td รวมค่าเช่า
+                        td จ่าย
+                        td หมายเหตุ
                         td(style="width : 90px")
                             i.fa.fa-cog.fa-spin.fa-3w.fa-fw
                     tbody
@@ -71,16 +68,16 @@ block content
                         span(aria-hidden='true') &times;
                     h4.modal-title
                         i.fa.fa-search.fa-lg
-                        | &nbsp;เพิ่มรายชื่อการเช่ารถ
+                        | &nbsp;เพิ่มข้อมูลการจ่ายค่าเช่า
                 .modal-body(style="padding-top: 20px;")
                     input(type="hidden")#txtId
                     .row
                         .col-md-6
                             .form-group.has-feedback
-                                label(for="txtDate_rent") วันที่เช่ารถ:
+                                label(for="txtDate_bill") วันที่ออกใบเสร็จ:
                                 | &nbsp;&nbsp;
                                 #datetimepicker.input-group(data-datepicker)
-                                    input#txtDate_rent.form-control(type='text')
+                                    input#txtDate_bill.form-control(type='text')
                                     span.input-group-addon
                                         span.glyphicon.glyphicon-calendar       
                     | &nbsp;
@@ -94,43 +91,20 @@ block content
                                     option(value="") กรุณาเลือกรายการ....
                                     for a in data.person_taxis
                                         option(value="#{a.id}") #{a.person}        
-                        .col-md-6
-                            .form-group       
-                                label(for="slLicense_taxi") ทะเบียนรถ Taxi:
-                                | &nbsp;
-                                select#slLicense_taxi.form-control.css-require
-                                    option(value="") กรุณาเลือกรายการ....
-                                    for b in data.taxis
-                                        option(value="#{b.id}") #{b.license_plate}
                     | &nbsp;
-                    | &nbsp;                    
-                    .row
-                        .col-md-6
-                            .form-group
-                                label(for="slType_rent") ประเภทการเช่า Taxi:
-                                | &nbsp;
-                                select#slType_rent.form-control.css-require
-                                    option(value="") กรุณาเลือกรายการ....
-                                    for c in data.rent_types
-                                        option(value="#{c.id}") #{c.rent_type}
-                        .col-md-6#divPrice_taxi
-                            .form-group
-                                label(for="txtPrice_rent") ราคาค่าเช่ารถ
-                                input(type="number",name="Price_rent",placeholder="ค่าเช่ารถ")#txtPrice_rent.form-control   
-                    | &nbsp;
-                    | &nbsp;                      
+                    | &nbsp;                             
                     .row                       
                         .col-md-6
                             .form-group
-                                label(for="txtspecial_pay") * ค่าบริการพิเศษ (ไม่มีให้ใส่เลข 0)
-                                input(type="number",name="special_pay",placeholder="ค่าบริการพิเศษ")#txtSpecial_pay.form-control                                                      
+                                label(for="txtPay") จำนวนเงินที่จ่าย 
+                                input(type="number",name="pay",placeholder="ค่าบริการพิเศษ")#txtPay.form-control                                                      
                     | &nbsp;   
                     | &nbsp;
                     .row
                         .col-md-12
                             .form-group
-                                label(for="txtNote_special_pay") บันทึกรายละเอียดค่าบริการพิเศษ
-                                textarea#txtNote_special_pay(type="text", rows="3", placeholder="ยังไม่มีรายละเอียด").form-control 
+                                label(for="txtNote") หมายเหตุ
+                                textarea#txtNote(type="text", rows="3", placeholder="ยังไม่มีรายละเอียด").form-control 
                 .modal-footer
                     button.btn.btn-primary#btnSave
                         i.fa.fa-save

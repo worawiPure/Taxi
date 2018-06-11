@@ -11,7 +11,7 @@ var remove = require('../models/report_stat');
 var utils = require('../models/utils');
 var option_list = require('../models/option_list');
 var rent_taxi = require('../models/rent_taxi');
-var bill_taxi = require('../models/rent_taxi');
+var bill_taxi = require('../models/bill_taxi');
 var hosxp_service = require('../models/hos_service');
 var fs = require('fs');
 var fse = require('fs-extra');
@@ -64,7 +64,7 @@ router.post('/save_bill', function(req,res){
     data.date_bill=moment(data.date_bill, 'DD/MM/YYYY').format('YYYY-MM-DD');
     console.log(data);
     if(data){
-        rent_taxi.Save_rent(db,data)
+        bill_taxi.Save_bill(db,data)
                 .then(function() {
                 res.send({ok: true});
             },
@@ -76,10 +76,10 @@ router.post('/save_bill', function(req,res){
     }
 });
     
-router.post('/rent_total_today' ,function(req,res) {
+router.post('/bill_total_today' ,function(req,res) {
     var db = req.db;
     var _today = moment().format('YYYY-MM-DD');
-    rent_taxi.Rent_total_today(db,_today)
+    bill_taxi.Bill_total_today(db,_today)
         .then(function(total) {
             res.send({ok:true,total:total})
         },function(err){
@@ -88,11 +88,11 @@ router.post('/rent_total_today' ,function(req,res) {
     )
 });
 
-router.post('/rent_detail_today' ,function(req,res) {
+router.post('/bill_detail_today' ,function(req,res) {
     var db = req.db;
     var _today = moment().format('YYYY-MM-DD');
     var startpage  = parseInt(req.body.startRecord);
-    rent_taxi.Rent_detail_today(db,_today,startpage)
+    bill_taxi.Bill_detail_today(db,_today,startpage)
         .then(function(rows) {
             console.log(rows);
             res.send({ok:true,rows:rows})
@@ -102,15 +102,15 @@ router.post('/rent_detail_today' ,function(req,res) {
     )
 });
 
-router.post('/edit_rent', function(req,res){
+router.post('/edit_bill', function(req,res){
     var db = req.db;
     var data = req.body.data;
     data.username = req.session.username; 
     data.date_update = moment(req.session.date_now , 'DD-MM-YYYY').format('YYYY-MM-DD');  
-    data.date_rent=moment(data.date_rent, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    data.date_bill=moment(data.date_bill, 'DD/MM/YYYY').format('YYYY-MM-DD');
     console.log(data);
     if(data){
-            rent_taxi.Update_rent(db,data)
+            bill_taxi.Update_bill(db,data)
             .then(function(){
             res.send({ok:true})
             },function(err){
@@ -123,11 +123,11 @@ router.post('/edit_rent', function(req,res){
 
 
 
-router.post('/remove_rent',function(req,res){
+router.post('/remove_bill',function(req,res){
     var db = req.db;
     var id = req.body.id;
     if(id){
-        rent_taxi.Remove_report(db,id)
+        bill_taxi.Remove_bill(db,id)
             .then(function(){
                 res.send({ok:true})
             },function(err){
@@ -138,7 +138,7 @@ router.post('/remove_rent',function(req,res){
     }
 });
 
-router.get('/search_rent_taxi', function(req, res, next) {
+router.get('/search_bill_taxi', function(req, res, next) {
     if (req.session.level_user_id != 1){
         res.render('./page/access_denied')
     } else {
@@ -158,22 +158,22 @@ router.get('/search_rent_taxi', function(req, res, next) {
             .then(function(rows){
                 console.log(rows)
                 data.rent_types =rows;
-                res.render('page/search_rent_taxi',{data:data});      
+                res.render('page/search_bill_taxi',{data:data});      
             },function(err){
-                res.render('page/search_rent_taxi',{
+                res.render('page/search_bill_taxi',{
                     data:{taxis:[],person_taxis:[],rent_types:[]}
                 });
             });
     }});
 
-router.post('/search_rent_taxi_detail',function(req,res){
+router.post('/search_bill_taxi_detail',function(req,res){
     var db = req.db;
     var data = {};
     data.date1 = req.body.date1;
     data.date2 = req.body.date2;
     data.date1=moment(data.date1, 'DD/MM/YYYY').format('YYYY-MM-DD');
     data.date2=moment(data.date2, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    rent_taxi.Search_rent_taxi(db,data)
+    bill_taxi.Search_bill_taxi(db,data)
         .then(function(rows){
             res.send({ok: true,rows:rows});
         },
@@ -183,7 +183,7 @@ router.post('/search_rent_taxi_detail',function(req,res){
         })
 });
    
-router.post('/search_rent_taxi_detail_person',function(req,res){
+router.post('/search_bill_taxi_detail_person',function(req,res){
     var db = req.db;
     var data = {};
     data.date1 = req.body.date1;
@@ -191,7 +191,7 @@ router.post('/search_rent_taxi_detail_person',function(req,res){
     data.personx = req.body.personx;
     data.date1=moment(data.date1, 'DD/MM/YYYY').format('YYYY-MM-DD');
     data.date2=moment(data.date2, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    rent_taxi.Search_rent_taxi_person(db,data)
+    bill_taxi.Search_bill_taxi_person(db,data)
         .then(function(rows){
             res.send({ok: true,rows:rows});
         },
@@ -201,37 +201,26 @@ router.post('/search_rent_taxi_detail_person',function(req,res){
         })
 });
     
-router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, next) {
+router.get('/search_bill_date/:date_report1/:date_report2', function (req, res, next) {
     var db = req.db;
     var json = {};
     json.detail=[];
     var date1 = req.params.date_report1;
     var date2 = req.params.date_report2;
     console.log(date1,date2);
-    rent_taxi.Sum_pay_rent_search(db,date1,date2)
+    bill_taxi.Sum_pay_bill_search(db,date1,date2)
         .then(function(rows){
             json.total_pay = numeral(rows).format('0,0.00');
-            return rent_taxi.Sum_special_search(db,date1,date2)
-        })
-        .then(function(rows){
-            json.total_special_pay = numeral(rows).format('0,0.00');
-            return rent_taxi.Sum_price_search(db,date1,date2)
-        })
-        .then(function(rows){
-            json.total_price = numeral(rows).format('0,0.00');
-            return rent_taxi.Search_rent_date(db,date1,date2)
+            return bill_taxi.Search_bill_date(db,date1,date2)
         })
         .then(function(rows){
             console.log(rows);
             rows.forEach(function (v) {
                 var obj = {
-                    date_rental: moment(v.date_rental).format('DD/MM/YYYY'),
+                    date_bill: moment(v.date_bill).format('DD/MM/YYYY'),
                     person: v.Pt,
-                    license_plate: v.license_plate,
-                    type_rent: v.type_rent,
-                    cost_rent: v.cost_rent,
-                    special_pay: v.special_pay,
-                    sumprice_rent: v.sumprice_rent 
+                    receive_money: v.receive_money,
+                    note: v.note
                 }
                 json.detail.push(obj)
             })
@@ -243,7 +232,7 @@ router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, 
             json.img = './img/sign.png';
             // Create pdf
             gulp.task('html', function (cb) {
-                return gulp.src('./templates/report_rent_search.jade')
+                return gulp.src('./templates/report_bill_search.jade')
                     .pipe(data(function () {
                         return json;
                     }))
@@ -253,12 +242,12 @@ router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, 
             });
 
             gulp.task('pdf', ['html'], function () {
-                var html = fs.readFileSync(destPath + '/report_rent_search.html', 'utf8')
+                var html = fs.readFileSync(destPath + '/report_bill_search.html', 'utf8')
                 var options = {
                     format: 'A4',
                     header:{
                         height: "18mm",
-                        contents: '<div style="text-align: center"><h2>รายการเช่ารถ ตั้งแต่ '+ moment(date1).format('DD/MM/YYYY') +' - '+ moment(date2).format('DD/MM/YYYY') +'</h2></div>'
+                        contents: '<div style="text-align: center"><h2>รายการจ่ายค่าเช่ารถ ตั้งแต่ '+ moment(date1).format('DD/MM/YYYY') +' - '+ moment(date2).format('DD/MM/YYYY') +'</h2></div>'
                     },
                     footer: {
                         height: "15mm",
@@ -266,7 +255,7 @@ router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, 
                     }
                 };
 
-                var pdfName = './templates/pdf/report_rent_all' + moment().format('x') + '.pdf';
+                var pdfName = './templates/pdf/report_bill_date' + moment().format('x') + '.pdf';
 
                 pdf.create(html, options).toFile(pdfName, function(err, resp) {
                     if (err) {
@@ -288,7 +277,7 @@ router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, 
     // ensure directory
 });
 
-router.get('/search_rent_date_person/:date_report1/:date_report2/:personx', function (req, res, next) {
+router.get('/search_bill_date_person/:date_report1/:date_report2/:personx', function (req, res, next) {
     var db = req.db;
     var json = {};
     json.detail=[];
@@ -296,36 +285,45 @@ router.get('/search_rent_date_person/:date_report1/:date_report2/:personx', func
     var date2 = req.params.date_report2;
     var personx = req.params.personx;
     console.log(date1,date2,personx);
-    rent_taxi.Sum_pay_rent_search_person(db,date1,date2,personx)
+    rent_taxi.Sum_price_search_person(db,date1,date2,personx)
         .then(function(rows){
-            json.total_pay = numeral(rows).format('0,0.00');
-            return rent_taxi.Sum_special_search_person(db,date1,date2,personx)
+            json.total_pay = rows;
+            return bill_taxi.Sum_pay_bill_search_person(db,date1,date2,personx)
         })
         .then(function(rows){
-            json.total_special_pay = numeral(rows).format('0,0.00');
-            return rent_taxi.Sum_price_search_person(db,date1,date2,personx)
+            json.total_receive = rows;
+            return rent_taxi.Sum_price_rent_person(db,personx)
         })
         .then(function(rows){
-            json.total_price = numeral(rows).format('0,0.00');
+            json.total_rent_person = rows;
+            return bill_taxi.Sum_price_bill_person(db,personx)
+        })
+        .then(function(rows){
+            json.total_bill_person = rows;
             return option_list.getList_person_id(db,personx)
         })
         .then(function(rows){
             json.person_name = rows[0];
-            return rent_taxi.Search_rent_date_person(db,date1,date2,personx)
+            return bill_taxi.Search_bill_date_person(db,date1,date2,personx)
         })
         .then(function(rows){
             rows.forEach(function (v) {
                 var obj = {
-                    date_rental: moment(v.date_rental).format('DD/MM/YYYY'),
+                    date_bill: moment(v.date_bill).format('DD/MM/YYYY'),
                     person: v.Pt,
-                    license_plate: v.license_plate,
-                    type_rent: v.type_rent,
-                    cost_rent: v.cost_rent,
-                    special_pay: v.special_pay,
-                    sumprice_rent: v.sumprice_rent 
+                    receive_money: v.receive_money,
+                    note: v.note 
                 }
                 json.detail.push(obj)
             })
+           json.total_pay2 = numeral(json.total_pay).format('0,0.00');
+           json.total_receive2 = numeral(json.total_receive).format('0,0.00');
+           json.total_k_date = parseFloat(json.total_pay) - parseFloat(json.total_receive);
+           json.total_k_date2 = numeral(json.total_k_date).format('0,0.00');
+           json.total_rent_person2 = numeral(json.total_rent_person).format('0,0.00');
+           json.total_bill_person2 = numeral(json.total_bill_person).format('0,0.00');
+           json.total_k_all = parseFloat(json.total_rent_person) - parseFloat(json.total_bill_person);
+           json.total_k_all2 = numeral(json.total_k_all).format('0,0.00');
             //console.log(json.detail);
             fse.ensureDirSync('./templates/html');
             fse.ensureDirSync('./templates/pdf');
@@ -334,7 +332,7 @@ router.get('/search_rent_date_person/:date_report1/:date_report2/:personx', func
             json.img = './img/sign.png';
             // Create pdf
             gulp.task('html', function (cb) {
-                return gulp.src('./templates/report_rent_search_person.jade')
+                return gulp.src('./templates/report_bill_search_person.jade')
                     .pipe(data(function () {
                         return json;
                     }))
@@ -344,12 +342,12 @@ router.get('/search_rent_date_person/:date_report1/:date_report2/:personx', func
             });
 
             gulp.task('pdf', ['html'], function () {
-                var html = fs.readFileSync(destPath + '/report_rent_search_person.html', 'utf8')
+                var html = fs.readFileSync(destPath + '/report_bill_search_person.html', 'utf8')
                 var options = {
                     format: 'A4',
                     header:{
                         height: "18mm",
-                        contents: '<div style="text-align: center"><h2>รายการเช่ารถ '+ json.person_name.person +' ตั้งแต่ '+ moment(date1).format('DD/MM/YYYY') +' - '+ moment(date2).format('DD/MM/YYYY') +'</h2></div>'
+                        contents: '<div style="text-align: center"><h2>รายการจ่ายค่าเช่ารถ '+ json.person_name.person +' ตั้งแต่ '+ moment(date1).format('DD/MM/YYYY') +' - '+ moment(date2).format('DD/MM/YYYY') +'</h2></div>'
                     },
                     footer: {
                         height: "15mm",
@@ -357,7 +355,7 @@ router.get('/search_rent_date_person/:date_report1/:date_report2/:personx', func
                     }
                 };
 
-                var pdfName = './templates/pdf/report_rent'+ json.person_name.person +''+ moment().format('x') + '.pdf';
+                var pdfName = './templates/pdf/report_bill'+ json.person_name.person +''+ moment().format('x') + '.pdf';
 
                 pdf.create(html, options).toFile(pdfName, function(err, resp) {
                     if (err) {

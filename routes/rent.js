@@ -146,7 +146,7 @@ router.post('/remove_rent',function(req,res){
     var db = req.db;
     var id = req.body.id;
     if(id){
-        rent_taxi.Remove_report(db,id)
+        rent_taxi.Remove_rent(db,id)
             .then(function(){
                 res.send({ok:true})
             },function(err){
@@ -285,7 +285,7 @@ router.get('/search_rent_date/:date_report1/:date_report2', function (req, res, 
                     }
                 };
 
-                var pdfName = './templates/pdf/report_rent_all' + moment().format('x') + '.pdf';
+                var pdfName = './templates/pdf/report_rent_date' + moment().format('x') + '.pdf';
 
                 pdf.create(html, options).toFile(pdfName, function(err, resp) {
                     if (err) {

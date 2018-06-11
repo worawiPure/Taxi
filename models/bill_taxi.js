@@ -2,16 +2,17 @@ var Q = require('q');
 
 module.exports = {
 
-        Save_rent: function (db,data){
+        Save_bill: function (db,data){
             var q = Q.defer();
-            db('taxi_income')
+            db('bill_taxi')
                 .insert({
-                    date_bill: data.date_bill,
                     person_id: data.person,
-                    pay: data.pay,
+                    date_bill: data.date_bill,
+                    receive_money: data.pay,
                     note: data.note,  
-                    date_update: data.date_update,
-                    user_edit: data.username
+                    user_edit: data.username,
+                    date_update: data.date_update
+                   
                 })
                 .then(function(rows) {
                     q.resolve(rows);
@@ -22,45 +23,10 @@ module.exports = {
             return q.promise;
         },
 
-        Check_personOrtaxi_total: function(db,data){
+        Bill_total_today: function(db,_today){
             var q = Q.defer();
-            var sql =   'SELECT count(*) as total FROM taxi_income ' +
-                        'WHERE date_rental = ? '+
-                        'AND   ( person_id = ?  '+
-                        'OR taxi_id = ? )     ';
-            db.raw(sql,[data.date_rent,data.person,data.license_taxi])
-                .then(function(rows){
-                    console.log(rows[0]);
-                    q.resolve(rows[0][0].total)
-                })
-                .catch(function(err){
-                    console.log(err)
-                    q.reject(err)
-                });
-            return q.promise;
-        },
-
-        Check_taxi_total: function(db,data){
-            var q = Q.defer();
-            var sql =   'SELECT count(*) as total FROM taxi_income ' +
-                        'WHERE date_rental = ? '+
-                        'AND taxi_id = ?       ';
-            db.raw(sql,[data.date_rent,data.license_taxi])
-                .then(function(rows){
-                    console.log(rows[0]);
-                    q.resolve(rows[0][0].total)
-                })
-                .catch(function(err){
-                    console.log(err)
-                    q.reject(err)
-                });
-            return q.promise;
-        },
-
-        Rent_total_today: function(db,_today){
-            var q = Q.defer();
-            var sql =   'SELECT count(*) as total FROM taxi_income '+
-                        'WHERE date_rental = ?  ';
+            var sql =   'SELECT count(*) as total FROM bill_taxi '+
+                        'WHERE date_bill = ?  ';
             db.raw(sql,[_today])
                 .then(function(rows){
                     console.log(rows[0]);
@@ -73,15 +39,12 @@ module.exports = {
             return q.promise;
         },
 
-        Rent_detail_today: function(db,_today,startpage){
+        Bill_detail_today: function(db,_today,startpage){
             var q = Q.defer();
-            var sql = 'SELECT t.id,t.date_rental,t.person_id,concat(p.pname,p.fname," ",p.lname) AS Pt, '+
-            't.taxi_id,l.license_plate,t.type_rental,r.name as type_rent,t.cost_rent,t.special_pay,t.sumprice_rent,t.note_special_pay FROM taxi_income t '+
-            'LEFT JOIN person_taxi p ON p.id=t.person_id '+
-            'LEFT JOIN license_taxi l ON l.id=t.taxi_id '+
-            'LEFT JOIN rent_type r ON r.id=t.type_rental '+
-            'WHERE date_rental = ?  '+
-            'limit 30 offset ? ';
+            var sql = 'SELECT b.person_id,b.id,b.date_bill,concat(p.pname,p.fname," ",p.lname) as Pt,b.receive_money,b.note FROM  bill_taxi b '+
+                      'LEFT JOIN person_taxi p ON p.id=b.person_id '+
+                      'WHERE b.date_bill = ? '+
+                      'limit 30 offset ? ';
             db.raw(sql,[_today,startpage])
                 //var sql = db.raw(sql,[data.date,data.username]).toSQL() คำสั่งเช็ค ค่า และคำสั่ง SQL
                 .then(function(rows){
@@ -95,20 +58,16 @@ module.exports = {
             return q.promise;
         },
 
-        Update_rent: function (db,data) {
+        Update_bill: function (db,data) {
             var q = Q.defer();
-            db('taxi_income')
+            db('bill_taxi')
                 .update({
-                    date_rental: data.date_rent,
                     person_id: data.person,
-                    taxi_id: data.license_taxi,
-                    type_rental: data.type_rent,
-                    cost_rent: data.price_rent,
-                    special_pay: data.special_pay,
-                    note_special_pay: data.note_special_pay,
-                    sumprice_rent: data.sumprice_rent,
-                    date_update: data.date_update,
-                    user_edit: data.username
+                    date_bill: data.date_bill,
+                    receive_money: data.pay,
+                    note: data.note,  
+                    user_edit: data.username,
+                    date_update: data.date_update
                 })
                 .where('id',data.id)
                 .then(function (rows) {
@@ -120,9 +79,9 @@ module.exports = {
             return q.promise;
         },
 
-        Remove_report: function(db,id){
+        Remove_bill: function(db,id){
             var q = Q.defer();
-            db('taxi_income')
+            db('bill_taxi')
                 .delete()
                 .where('id',id)
                 .then(function(){
@@ -134,15 +93,12 @@ module.exports = {
             return q.promise;
         },
 
-        Search_rent_taxi: function(db,data){
+        Search_bill_taxi: function(db,data){
             var q = Q.defer();
-            var sql = 'SELECT t.id,t.date_rental,t.person_id,concat(p.pname,p.fname," ",p.lname) AS Pt, '+
-            't.taxi_id,l.license_plate,t.type_rental,r.name as type_rent,t.cost_rent,t.special_pay,t.sumprice_rent,t.note_special_pay FROM taxi_income t '+
-            'LEFT JOIN person_taxi p ON p.id=t.person_id '+
-            'LEFT JOIN license_taxi l ON l.id=t.taxi_id '+
-            'LEFT JOIN rent_type r ON r.id=t.type_rental '+
-            'WHERE date_rental BETWEEN ? AND ?  '+
-            'ORDER BY t.date_rental ';
+            var sql = 'SELECT b.person_id,b.id,b.date_bill,concat(p.pname,p.fname," ",p.lname) as Pt,b.receive_money,b.note FROM  bill_taxi b '+
+                      'LEFT JOIN person_taxi p ON p.id=b.person_id '+
+                      'WHERE b.date_bill BETWEEN ? AND ?  '+
+                      'ORDER BY b.date_bill ';
             db.raw(sql,[data.date1,data.date2])
                 //var sql = db.raw(sql,[data.date,data.username]).toSQL() คำสั่งเช็ค ค่า และคำสั่ง SQL
                 .then(function(rows){
@@ -155,16 +111,13 @@ module.exports = {
             return q.promise;
         },
 
-        Search_rent_taxi_person: function(db,data){
+        Search_bill_taxi_person: function(db,data){
             var q = Q.defer();
-            var sql = 'SELECT t.id,t.date_rental,t.person_id,concat(p.pname,p.fname," ",p.lname) AS Pt, '+
-            't.taxi_id,l.license_plate,t.type_rental,r.name as type_rent,t.cost_rent,t.special_pay,t.sumprice_rent,t.note_special_pay FROM taxi_income t '+
-            'LEFT JOIN person_taxi p ON p.id=t.person_id '+
-            'LEFT JOIN license_taxi l ON l.id=t.taxi_id '+
-            'LEFT JOIN rent_type r ON r.id=t.type_rental '+
-            'WHERE date_rental BETWEEN ? AND ?  '+
-            'AND t.person_id = ? '+
-            'ORDER BY t.date_rental ';
+            var sql = 'SELECT b.person_id,b.id,b.date_bill,concat(p.pname,p.fname," ",p.lname) as Pt,b.receive_money,b.note FROM  bill_taxi b '+
+                      'LEFT JOIN person_taxi p ON p.id=b.person_id '+
+                      'WHERE b.date_bill BETWEEN ? AND ?  '+
+                      'AND b.person_id = ? '+
+                      'ORDER BY b.date_bill ';
             db.raw(sql,[data.date1,data.date2,data.personx])
                 //var sql = db.raw(sql,[data.date,data.username]).toSQL() คำสั่งเช็ค ค่า และคำสั่ง SQL
                 .then(function(rows){
@@ -177,15 +130,12 @@ module.exports = {
             return q.promise;
         },
 
-        Search_rent_date: function(db,date1,date2){
+        Search_bill_date: function(db,date1,date2){
             var q = Q.defer();
-            var sql = 'SELECT t.id,t.date_rental,t.person_id,concat(p.pname,p.fname," ",p.lname) AS Pt, '+
-            't.taxi_id,l.license_plate,t.type_rental,r.name as type_rent,t.cost_rent,t.special_pay,t.sumprice_rent,t.note_special_pay FROM taxi_income t '+
-            'LEFT JOIN person_taxi p ON p.id=t.person_id '+
-            'LEFT JOIN license_taxi l ON l.id=t.taxi_id '+
-            'LEFT JOIN rent_type r ON r.id=t.type_rental '+
-            'WHERE date_rental BETWEEN ? AND ?  '+
-            'ORDER BY t.date_rental ';
+            var sql = 'SELECT b.person_id,b.id,b.date_bill,concat(p.pname,p.fname," ",p.lname) as Pt,b.receive_money,b.note FROM  bill_taxi b '+
+                      'LEFT JOIN person_taxi p ON p.id=b.person_id '+
+                      'WHERE b.date_bill BETWEEN ? AND ?  '+
+                      'ORDER BY b.date_bill ';
             db.raw(sql,[date1,date2])
                 //var sql = db.raw(sql,[data.date,data.username]).toSQL() คำสั่งเช็ค ค่า และคำสั่ง SQL
                 .then(function(rows){
@@ -198,16 +148,13 @@ module.exports = {
             return q.promise;
         },
 
-        Search_rent_date_person: function(db,date1,date2,personx){
+        Search_bill_date_person: function(db,date1,date2,personx){
             var q = Q.defer();
-            var sql = 'SELECT t.id,t.date_rental,t.person_id,concat(p.pname,p.fname," ",p.lname) AS Pt, '+
-            't.taxi_id,l.license_plate,t.type_rental,r.name as type_rent,t.cost_rent,t.special_pay,t.sumprice_rent,t.note_special_pay FROM taxi_income t '+
-            'LEFT JOIN person_taxi p ON p.id=t.person_id '+
-            'LEFT JOIN license_taxi l ON l.id=t.taxi_id '+
-            'LEFT JOIN rent_type r ON r.id=t.type_rental '+
-            'WHERE date_rental BETWEEN ? AND ?  '+
-            'AND person_id = ? '+
-            'ORDER BY t.date_rental ';
+            var sql = 'SELECT b.person_id,b.id,b.date_bill,concat(p.pname,p.fname," ",p.lname) as Pt,b.receive_money,b.note FROM  bill_taxi b '+
+                      'LEFT JOIN person_taxi p ON p.id=b.person_id '+
+                      'WHERE b.date_bill BETWEEN ? AND ?  '+
+                      'AND b.person_id = ? '+
+                      'ORDER BY b.date_bill ';
             db.raw(sql,[date1,date2,personx])
                 //var sql = db.raw(sql,[data.date,data.username]).toSQL() คำสั่งเช็ค ค่า และคำสั่ง SQL
                 .then(function(rows){
@@ -220,10 +167,10 @@ module.exports = {
             return q.promise;
         },
 
-        Sum_pay_rent_search: function(db,date1,date2){
+        Sum_pay_bill_search: function(db,date1,date2){
             var q = Q.defer();
-            var sql =   'SELECT sum(cost_rent) as total_pay FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ?  ';
+            var sql =   'SELECT sum(receive_money) as total_pay FROM bill_taxi '+
+                        'WHERE date_bill BETWEEN ? AND ?  ';
             db.raw(sql,[date1,date2])
                 .then(function(rows){
                     q.resolve(rows[0][0].total_pay)
@@ -235,29 +182,14 @@ module.exports = {
             return q.promise;
         },
 
-        Sum_pay_rent_search_person: function(db,date1,date2,personx){
+        Sum_pay_bill_search_person: function(db,date1,date2,personx){
             var q = Q.defer();
-            var sql =   'SELECT sum(cost_rent) as total_pay FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ? '+
+            var sql =   'SELECT sum(receive_money) as total_receive FROM bill_taxi '+
+                        'WHERE date_bill BETWEEN ? AND ?  '+
                         'AND person_id = ?   ';
             db.raw(sql,[date1,date2,personx])
                 .then(function(rows){
-                    q.resolve(rows[0][0].total_pay)
-                })
-                .catch(function(err){
-                    console.log(err)
-                    q.reject(err)
-                });
-            return q.promise;
-        },
-        
-        Sum_special_search: function(db,date1,date2){
-            var q = Q.defer();
-            var sql =   'SELECT sum(special_pay) as total_special_pay FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ?  ';
-            db.raw(sql,[date1,date2])
-                .then(function(rows){
-                    q.resolve(rows[0][0].total_special_pay)
+                    q.resolve(rows[0][0].total_receive)
                 })
                 .catch(function(err){
                     console.log(err)
@@ -266,45 +198,13 @@ module.exports = {
             return q.promise;
         },
 
-        Sum_special_search_person: function(db,date1,date2,personx){
+        Sum_price_bill_person: function(db,personx){
             var q = Q.defer();
-            var sql =   'SELECT sum(special_pay) as total_special_pay FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ?  '+
-                        'AND person_id = ? ';
-            db.raw(sql,[date1,date2,personx])
+            var sql =   'SELECT sum(receive_money) as total_bill_person FROM bill_taxi '+
+                        'WHERE  person_id = ? ';
+            db.raw(sql,[personx])
                 .then(function(rows){
-                    q.resolve(rows[0][0].total_special_pay)
-                })
-                .catch(function(err){
-                    console.log(err)
-                    q.reject(err)
-                });
-            return q.promise;
-        },
-
-        Sum_price_search: function(db,date1,date2){
-            var q = Q.defer();
-            var sql =   'SELECT sum(sumprice_rent) as total_price FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ?  ';
-            db.raw(sql,[date1,date2])
-                .then(function(rows){
-                    q.resolve(rows[0][0].total_price)
-                })
-                .catch(function(err){
-                    console.log(err)
-                    q.reject(err)
-                });
-            return q.promise;
-        },
-
-        Sum_price_search_person: function(db,date1,date2,personx){
-            var q = Q.defer();
-            var sql =   'SELECT sum(sumprice_rent) as total_price FROM taxi_income '+
-                        'WHERE date_rental BETWEEN ? AND ?  '+
-                        'AND person_id = ? ';
-            db.raw(sql,[date1,date2,personx])
-                .then(function(rows){
-                    q.resolve(rows[0][0].total_price)
+                    q.resolve(rows[0][0].total_bill_person)
                 })
                 .catch(function(err){
                     console.log(err)

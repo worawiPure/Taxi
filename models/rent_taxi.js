@@ -124,7 +124,7 @@ module.exports = {
             return q.promise;
         },
 
-        Remove_report: function(db,id){
+        Remove_rent: function(db,id){
             var q = Q.defer();
             db('taxi_income')
                 .delete()
@@ -309,6 +309,21 @@ module.exports = {
             db.raw(sql,[date1,date2,personx])
                 .then(function(rows){
                     q.resolve(rows[0][0].total_price)
+                })
+                .catch(function(err){
+                    console.log(err)
+                    q.reject(err)
+                });
+            return q.promise;
+        },
+
+        Sum_price_rent_person: function(db,personx){
+            var q = Q.defer();
+            var sql =   'SELECT sum(sumprice_rent) as total_rent_person FROM taxi_income '+
+                        'WHERE  person_id = ? ';
+            db.raw(sql,[personx])
+                .then(function(rows){
+                    q.resolve(rows[0][0].total_rent_person)
                 })
                 .catch(function(err){
                     console.log(err)

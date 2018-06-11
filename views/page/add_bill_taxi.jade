@@ -11,20 +11,19 @@ block content
                 | &nbsp; รายการจ่ายค่าเช่ารถ Taxi วันนี้
         .panel-body
             button.btn.btn-sm.pull-right(style="background-color:#70BAC2")
-                a(href="/rent/search_rent_taxi")
+                a(href="/bill/search_bill_taxi")
                     i.fa.fa-search.fa-lg
                     | &nbsp; ค้นหาข้อมูลการจ่าย
             buton.btn.btn-inverse.btn-sm.pull-right#btnShowModal
                 i.fa.fa-plus
                 | &nbsp; เพิ่มข้อมูลการจ่ายค่าเช่า
-            table.table.table-hover#tblRent_today
+            table.table.table-hover#tblBill_today
                 thead
                     tr
                         td ลำดับ
                         td วันที่
                         td ชื่อผู้เช่ารถ
                         td จ่าย
-                        td ค้างค่าเช่า ณ วันที่จ่าย
                         td หมายเหตุ
                         td(style="width : 90px")
                             i.fa.fa-cog.fa-spin.fa-3w.fa-fw

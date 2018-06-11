@@ -1,37 +1,33 @@
 $(function(){
     var setTable = function(data){
-        var $tblRent = $('#tblRent_today > tbody');
-        $tblRent.empty();
+        var $tblBill = $('#tblBill_today > tbody');
+        $tblBill.empty();
         var i=0;
         _.forEach(data.rows, function(v){
             i++;
             var html = '<tr> ' +
                 '<td> ' + i + ' </td>'+
-                '<td> ' + moment(v.date_rental).format('DD/MM/YYYY') + ' </td>'+
+                '<td> ' + moment(v.date_bill).format('DD/MM/YYYY') + ' </td>'+
                 '<td> ' + v.Pt + ' </td>'+
-                '<td> ' + v.license_plate + ' </td>'+
-                '<td> ' + v.type_rent + ' </td>'+
-                '<td> ' + v.cost_rent + ' </td>'+
-                '<td> ' + v.special_pay + ' </td>'+
-                '<td> ' + v.sumprice_rent + ' </td>'+
+                '<td> ' + v.receive_money + ' </td>'+
+                '<td> ' + v.note + ' </td>'+
                 '<td> '+
                 '   <div class="btn-group btn-group-sm" role="group"> '+
                 '<button  class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> '+
                 '<i class="fa fa-cogs"> </i> </button> '+
                 '<ul class="dropdown-menu"> '+
                 '<li> '+
-                '<a href="#" data-action="edit" data-id="'+ v.id +'" data-date_rent="'+ moment(v.date_rental).format('DD/MM/YYYY') +'" data-person="'+ v.person_id +'" '+
-                'data-license_taxi="'+ v.taxi_id +'" data-type_rent="'+ v.type_rental +'" data-price_rent="'+ v.cost_rent +'" data-special_pay="'+ v.special_pay +'"  '+
-                'data-note_special_pay="'+ v.note_special_pay +'" > '+
+                '<a href="#" data-action="edit" data-id="'+ v.id +'" data-date_bill="'+ moment(v.date_bill).format('DD/MM/YYYY') +'" data-person="'+ v.person_id +'" '+
+                'data-receive_money="'+ v.receive_money +'" data-note="'+ v.note +'"  '+
                 '<i class="fa fa-pencil fa-fw"> </i> แก้ไข </a></li> '+
                 '<li> '+
                 '<a href="#" data-action="remove" data-id="'+ v.id +'" > '+
                 '<i class="fa fa-trash"> </i> ลบ </a></li></ul></div> ';
-            $tblRent.append(html);
+            $tblBill.append(html);
         })
     };
 
-    var getRent_today = function(){
+    var getBill_today = function(){
         $.ajax({
             method:'POST',
             url:'/bill/bill_total_today',
@@ -121,23 +117,16 @@ $(function(){
 
     $(document).on('click','a[data-action="edit"]',function(e){
         e.preventDefault();
-        $('#divPrice_taxi').fadeIn();
-        var date_rent = $(this).data('date_rent');
+        var date_bill = $(this).data('date_bill');
         var person = $(this).data('person');
-        var license_taxi = $(this).data('license_taxi');
-        var type_rent = $(this).data('type_rent');
-        var price_rent = $(this).data('price_rent');
-        var special_pay = $(this).data('special_pay');
-        var note_special_pay = $(this).data('note_special_pay');
+        var receive_money = $(this).data('receive_money');
+        var note = $(this).data('note');
         var id = $(this).data('id');
 
-        $('#txtDate_rent').val(date_rent);
+        $('#txtDate_bill').val(date_bill);
         $('#slPerson').val(person);
-        $('#slLicense_taxi').val(license_taxi);
-        $('#slType_rent').val(type_rent);
-        $('#txtPrice_rent').val(price_rent);
-        $('#txtSpecial_pay').val(special_pay);
-        $('#txtNote_special_pay').val(note_special_pay);
+        $('#txtPay').val(receive_money);
+        $('#txtNote').val(note);
         $('#txtId').val(id);
         $("#mdlNew").modal({
             backdrop:'static',
@@ -153,41 +142,12 @@ $(function(){
         })
     });
 
-   $('#divPrice_taxi').fadeOut();
-
     $('#mdlNew').on('hidden.bs.modal', function (e) {
-        $('#txtDate_rent').val('');
+        $('#txtDate_bill').val('');
         $('#slPerson').val('');
-        $('#slLicense_taxi').val('');
-        $('#slType_rent').val('');
-        $('#txtSpecial_pay').val('');
-        $('#txtNote_special_pay').val('');
-        $('#txtPrice_rent').val('');
+        $('#txtPay').val('');
+        $('#txtNote').val('');
         $('#txtId').val(''); // do something...
-    });
-
-    $(document).on('change', '#slType_rent', function (e) {
-       var id = $(this).val();
-       console.log(id);
-        if(id){
-            $.ajax({
-                url:'/rent/select_price',
-                method:'POST',
-                data:{id:id}
-            })
-                .success(function (data) {
-                    var $text_price = $('#txtPrice_rent');
-                    $text_price.empty();
-                    _.forEach(data.rows, function (v) {
-                        $text_price.val(v.price);
-                    });
-                    $('#divPrice_taxi').fadeIn();
-                })
-                .error(function(xhr,status,err){
-            })
-        } else{
-           sweetAlert("Oops...", "กรุณาเลือกประเภทการเช่า!", "error");
-        }
     });
 
     $('#btnSave').on('click',function(e){
@@ -218,7 +178,7 @@ $(function(){
                             if (data.ok) {
                                 swal("แก้ไขข้อมูลเรียบร้อย!", "กดปุ่มตกลง", "success");
                                 $('#mdlNew').modal('hide');
-                                getRent_today(data);
+                                getBill_today(data);
                             } else {
                                 console.log(data.msg);
                                 sweetAlert("Oops...", "Taxi คันนี้ได้เช่า แล้วในวันนี้!", "error");
@@ -239,10 +199,10 @@ $(function(){
                             if (data.ok) {
                                 swal("บันทึกข้อมูลเรียบร้อยแล้ว!", "กดปุ่มตกลง!", "success");
                                 $('#mdlNew').modal('hide');
-                                getRent_today(data);
+                                getBill_today(data);
                             } else {
                                 console.log(data.msg);
-                                sweetAlert("Oops...", "บุคคลนี้ได้ทำการเช่ารถ Taxi หรือ รถ Taxi มีการเช่าแล้วในวันนี้!", "error");
+                                sweetAlert("Oops...", "ไม่สามารถบันทึกใบเสร็จได้!", "error");
                             }
                         })
                         .error(function (xhr, status, err) {
@@ -258,7 +218,7 @@ $(function(){
         if(confirm('คุณต้องการลบรายการนี้ ใช่หรือไม่')){
             $.ajax({
                 method:'POST',
-                url:'/rent/remove_rent',
+                url:'/bill/remove_bill',
                 dataType:'json',
                 data:{
                     id:id
@@ -267,7 +227,7 @@ $(function(){
                 .success(function(data){
                     if(data.ok) {
                         swal("ลบข้อมูลเรียบร้อยแล้ว!", "กดปุ่มตกลง!", "success");
-                        getRent_today(data);
+                        getBill_today(data);
                     } else {
                         console.log(data.msg);
                         sweetAlert("Oops...", "ไม่สามารถลบข้อมูลได้!", "error");
@@ -279,5 +239,5 @@ $(function(){
                 })
         }
     });
-    getRent_today();
+    getBill_today();
 });
